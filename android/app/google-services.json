@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "483388781036",
+    "project_id": "pilotstar-apk",
+    "storage_bucket": "pilotstar-apk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483388781036:android:b3ce7d7ffad3e9649d50c9",
+        "android_client_info": {
+          "package_name": "com.data.pilotstar_apk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "483388781036-9p4q2jmpnaemvof0dglthasaqm7obq0t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.data.pilotstar_apk",
+            "certificate_hash": "30dc33ad57b3234873cfda644b0ab62dfe30a338"
+          }
+        },
+        {
+          "client_id": "483388781036-7v3upti28kdfqu2lirb65tvppm3litr3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBILJrapx6TOqtQq4HA1ixfElw9IpetXIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "483388781036-o3dfsjtufllvbv6lrr9mtkg61jd40csq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "483388781036-d8vgmlk9fk5kab8an68r7jja23svo1i2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.data.pilotstarApk"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
