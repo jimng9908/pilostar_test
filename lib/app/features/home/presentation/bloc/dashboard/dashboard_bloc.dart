@@ -21,7 +21,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       LoadDashboardData event, Emitter<DashboardState> emit) async {
     emit(DashboardLoading(event.filter));
     try {
-      final data = await repository.getDashboardData(event.filter);
+      // final data = await repository.getDashboardData(event.filter);
+      final data = await getDashBoarEntity(event.filter);
       emit(DashboardLoaded(data, event.filter));
     } catch (_) {}
   }
@@ -50,5 +51,57 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         selectedWeatherDay: event.dayIndex,
       ));
     }
+  }
+
+  Future<DashboardEntity> getDashBoarEntity(DashboardFilter filter) async {
+    List<MetricEntity> metrics = [];
+    //Obtener metricas por separado
+    print("!!!!!revision!!!!!");
+    final totalRevenueAndExpenses =
+        await repository.getTotalRevenueAndExpenses(filter);
+    totalRevenueAndExpenses != null
+        ? metrics.add(totalRevenueAndExpenses)
+        : null;
+    final totalRevenue = await repository.getTotalRevenue(filter);
+    totalRevenue != null ? metrics.add(totalRevenue) : null;
+    final customers = await repository.getCustomers(filter);
+    customers != null ? metrics.add(customers) : null;
+    final averageTicket = await repository.getAverageTicket(filter);
+    averageTicket != null ? metrics.add(averageTicket) : null;
+    final pPercentage = await repository.getPersonalPercentage(filter);
+    pPercentage != null ? metrics.add(pPercentage) : null;
+    final mPercentage = await repository.getMerchandisePercentage(filter);
+    mPercentage != null ? metrics.add(mPercentage) : null;
+    final profitability = await repository.getProfitability(filter);
+    profitability != null ? metrics.add(profitability) : null;
+
+    return DashboardEntity(
+      filterType: filter.label,
+      mainAmount: 2450,
+      mainGoal: 21000,
+      mainPercentage: -5.2,
+      chartData: const ChartDataEntity(food: 1950, drinks: 500),
+      metrics: metrics,
+      objectives: const [
+        ObjectiveEntity(
+            title: "Ventas mensuales",
+            current: 86420,
+            target: 90000,
+            unit: "€",
+            kpi: KpiType.monthlySales),
+        ObjectiveEntity(
+            title: "Clientes mensuales",
+            current: 1200,
+            target: 1500,
+            unit: "clientes",
+            kpi: KpiType.monthlyClients),
+        ObjectiveEntity(
+            title: "Ticket medio",
+            current: 47.50,
+            target: 50,
+            unit: "€",
+            kpi: KpiType.monthlyAverageTicket),
+      ],
+    );
   }
 }

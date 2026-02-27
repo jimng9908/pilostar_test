@@ -27,6 +27,8 @@ class KpiIconMapper {
         return Icons.attach_money;
       case KpiType.monthlyAverageTicket:
         return Icons.receipt_long;
+      case KpiType.totalRevenueAndExpenses:
+        return Icons.payments_outlined;
     }
   }
 }
@@ -50,6 +52,7 @@ class KpiColorMapper {
         return const Color(0xFFFFB300); // Amber
       case KpiType.noShows:
         return const Color(0xFFFF3D00); // Deep Orange
+      case KpiType.totalRevenueAndExpenses:
       case KpiType.productivity:
         return const Color(0xFF2979FF); // Blue
     }

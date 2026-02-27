@@ -1,6 +1,307 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:rockstardata_apk/app/core/core.dart';
 import 'package:rockstardata_apk/app/features/home/index.dart';
 
-class DashboardRepositoryImpl {
+class TestData {
+  final String companyName = 'PALLAPIZZA';
+  final String venueName = 'PAMPLONA';
+  final String startDate;
+  final String endDate;
+  final String compare;
+  const TestData({
+    required this.startDate,
+    required this.endDate,
+    required this.compare,
+  });
+  factory TestData.fromFilter(DashboardFilter filter) {
+    String compare = 'day';
+    String startDate = DateTime.now().toString();
+    String endDate = DateTime.now().toString();
+    final now = DateTime.now();
+
+    switch (filter) {
+      case DashboardFilter.ayer:
+        //Fecha de ayer
+        startDate = now.subtract(const Duration(days: 1)).toString();
+        compare = 'day';
+        break;
+      case DashboardFilter.hoy:
+        compare = 'day';
+        break;
+      case DashboardFilter.mes:
+        //Primer día del mes actual
+        startDate = DateTime(now.year, now.month, 1).toString();
+        compare = 'months';
+        break;
+      case DashboardFilter
+            .semana: //no se permite en endpoints de estos indicadores
+        //Primer día del año actual
+        startDate = DateTime(now.year, 1, 1).toString();
+        compare = 'year';
+        break;
+    }
+    return TestData(startDate: startDate, endDate: endDate, compare: compare);
+  }
+}
+
+class DashboardRepositoryImpl implements HomeRepo {
+  Future<MetricEntity?> getTotalRevenueAndExpenses(
+      DashboardFilter filter) async {
+    //TestData para prueba, TODO: pedir por parametro
+    TestData params = TestData.fromFilter(filter);
+    final response = await http.get(
+      Uri.parse(
+              '${Constants.baseAuthUrl}/k-picore-finance/total-revenue-and-expenses')
+          .replace(
+        queryParameters: {
+          'company_name': params.companyName,
+          'venue_name': params.venueName,
+          'start_date': params.startDate,
+          'end_date': params.endDate,
+          'compare': params.compare,
+        },
+      ),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // La respuesta es una lista
+      final List<dynamic> jsonList = jsonDecode(response.body);
+
+      // Verificar que no está vacía
+      if (jsonList.isNotEmpty) {
+        // Tomar el primer elemento (y único)
+        final Map<String, dynamic> data =
+            jsonList.first as Map<String, dynamic>;
+        MetricEntity resp = MetricEntity.fromJsonTotalRevenueAndExpenses(data);
+        return resp.title != '' ? resp : null;
+      } else {
+        //Lista vacia
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<MetricEntity?> getTotalRevenue(DashboardFilter filter) async {
+    //TestData para prueba, TODO: pedir por parametro
+    TestData params = TestData.fromFilter(filter);
+    final response = await http.get(
+      Uri.parse('${Constants.baseAuthUrl}/k-picore-finance/total-revenue')
+          .replace(
+        queryParameters: {
+          'company_name': params.companyName,
+          'venue_name': params.venueName,
+          'start_date': params.startDate,
+          'end_date': params.endDate,
+          'compare': params.compare,
+        },
+      ),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // La respuesta es una lista
+      final List<dynamic> jsonList = jsonDecode(response.body);
+
+      // Verificar que no está vacía
+      if (jsonList.isNotEmpty) {
+        // Tomar el primer elemento (y único)
+        final Map<String, dynamic> data =
+            jsonList.first as Map<String, dynamic>;
+        MetricEntity resp = MetricEntity.fromJsonTotalRevenue(data);
+        return resp.title != '' ? resp : null;
+      } else {
+        //Lista vacia
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<MetricEntity?> getCustomers(DashboardFilter filter) async {
+    //TestData para prueba, TODO: pedir por parametro
+    TestData params = TestData.fromFilter(filter);
+    final response = await http.get(
+      Uri.parse('${Constants.baseAuthUrl}/k-picore-finance/customers').replace(
+        queryParameters: {
+          'company_name': params.companyName,
+          'venue_name': params.venueName,
+          'start_date': params.startDate,
+          'end_date': params.endDate,
+          'compare': params.compare,
+        },
+      ),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // La respuesta es una lista
+      final List<dynamic> jsonList = jsonDecode(response.body);
+
+      // Verificar que no está vacía
+      if (jsonList.isNotEmpty) {
+        // Tomar el primer elemento (y único)
+        final Map<String, dynamic> data =
+            jsonList.first as Map<String, dynamic>;
+        MetricEntity resp = MetricEntity.fromJsonCustomers(data);
+        return resp.title != '' ? resp : null;
+      } else {
+        //Lista vacia
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+//revisar que da error 500
+  Future<MetricEntity?> getAverageTicket(DashboardFilter filter) async {
+    //TestData para prueba, TODO: pedir por parametro
+    TestData params = TestData.fromFilter(filter);
+    final response = await http.get(
+      Uri.parse('${Constants.baseAuthUrl}/k-picore-finance/ticket-medium')
+          .replace(
+        queryParameters: {
+          'company_name': params.companyName,
+          'venue_name': params.venueName,
+          'start_date': params.startDate,
+          'end_date': params.endDate,
+          'compare': params.compare,
+        },
+      ),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // La respuesta es una lista
+      final List<dynamic> jsonList = jsonDecode(response.body);
+
+      // Verificar que no está vacía
+      if (jsonList.isNotEmpty) {
+        // Tomar el primer elemento (y único)
+        final Map<String, dynamic> data =
+            jsonList.first as Map<String, dynamic>;
+        MetricEntity resp = MetricEntity.fromJsonAverageTicket(data);
+        return resp.title != '' ? resp : null;
+      } else {
+        //Lista vacia
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<MetricEntity?> getPersonalPercentage(DashboardFilter filter) async {
+    //TestData para prueba, TODO: pedir por parametro
+    TestData params = TestData.fromFilter(filter);
+    final response = await http.get(
+      Uri.parse('${Constants.baseAuthUrl}/k-picore-finance/personal-percentage')
+          .replace(
+        queryParameters: {
+          'company_name': params.companyName,
+          'venue_name': params.venueName,
+          'start_date': params.startDate,
+          'end_date': params.endDate,
+          'compare': params.compare,
+        },
+      ),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // La respuesta es una lista
+      final List<dynamic> jsonList = jsonDecode(response.body);
+
+      // Verificar que no está vacía
+      if (jsonList.isNotEmpty) {
+        // Tomar el primer elemento (y único)
+        final Map<String, dynamic> data =
+            jsonList.first as Map<String, dynamic>;
+        MetricEntity resp = MetricEntity.fromJsonPersonalPercentage(data);
+        return resp.title != '' ? resp : null;
+      } else {
+        //Lista vacia
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<MetricEntity?> getMerchandisePercentage(DashboardFilter filter) async {
+    //TestData para prueba, TODO: pedir por parametro
+    TestData params = TestData.fromFilter(filter);
+    final response = await http.get(
+      Uri.parse(
+              '${Constants.baseAuthUrl}/k-picore-finance/merchandise-percentage')
+          .replace(
+        queryParameters: {
+          'company_name': params.companyName,
+          'venue_name': params.venueName,
+          'start_date': params.startDate,
+          'end_date': params.endDate,
+          'compare': params.compare,
+        },
+      ),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // La respuesta es una lista
+      final List<dynamic> jsonList = jsonDecode(response.body);
+
+      // Verificar que no está vacía
+      if (jsonList.isNotEmpty) {
+        // Tomar el primer elemento (y único)
+        final Map<String, dynamic> data =
+            jsonList.first as Map<String, dynamic>;
+        MetricEntity resp = MetricEntity.fromJsonMerchandisePercentage(data);
+        return resp.title != '' ? resp : null;
+      } else {
+        //Lista vacia
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<MetricEntity?> getProfitability(DashboardFilter filter) async {
+    //TestData para prueba, TODO: pedir por parametro
+    TestData params = TestData.fromFilter(filter);
+    final response = await http.get(
+      Uri.parse('${Constants.baseAuthUrl}/k-picore-finance/profitability')
+          .replace(
+        queryParameters: {
+          'company_name': params.companyName,
+          'venue_name': params.venueName,
+          'start_date': params.startDate,
+          'end_date': params.endDate,
+          'compare': params.compare,
+        },
+      ),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // La respuesta es una lista
+      final List<dynamic> jsonList = jsonDecode(response.body);
+
+      // Verificar que no está vacía
+      if (jsonList.isNotEmpty) {
+        // Tomar el primer elemento (y único)
+        final Map<String, dynamic> data =
+            jsonList.first as Map<String, dynamic>;
+        MetricEntity resp = MetricEntity.fromJsonProfitability(data);
+        return resp.title != '' ? resp : null;
+      } else {
+        //Lista vacia
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
   Future<DashboardEntity> getDashboardData(DashboardFilter filter) async {
     await Future.delayed(const Duration(milliseconds: 800)); // Simulación API
 

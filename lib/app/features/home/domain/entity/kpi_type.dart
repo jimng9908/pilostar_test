@@ -11,5 +11,6 @@ enum KpiType {
   monthlyClients,
   monthlyAverageTicket,
   material,
-  personal
+  personal,
+  totalRevenueAndExpenses
 }
