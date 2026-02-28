@@ -22,8 +22,6 @@ class DashboardEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [filterType, mainAmount, metrics, objectives, chartData];
+  List<Object?> get props =>
+      [filterType, mainAmount, metrics, objectives, chartData];
 }
-
-
-

@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rockstardata_apk/app/features/home/data/repo/index.dart';
 import 'package:rockstardata_apk/app/features/home/domain/entity/index.dart';
+import 'package:rockstardata_apk/app/features/home/domain/repo/index.dart';
 
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  final DashboardRepositoryImpl repository;
+  final HomeRepo repository;
 
-  DashboardBloc(this.repository) : super(DashboardInitial()) {
+  DashboardBloc({required this.repository}) : super(DashboardInitial()) {
     on<LoadDashboardData>(_onLoadDashboardData);
     on<ChangeChartCategory>(_onChangeChartCategory);
     on<ChangeWeatherDay>(_onChangeWeatherDay);
