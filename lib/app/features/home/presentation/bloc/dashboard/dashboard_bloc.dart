@@ -56,7 +56,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<DashboardEntity> getDashBoarEntity(DashboardFilter filter) async {
     List<MetricEntity> metrics = [];
     //Obtener metricas por separado
-    print("!!!!!revision!!!!!");
     final totalRevenueAndExpenses =
         await repository.getTotalRevenueAndExpenses(filter);
     totalRevenueAndExpenses != null

@@ -29,7 +29,7 @@ class TestDataModel {
       case DashboardFilter.mes:
         //Primer día del mes actual
         startDate = DateTime(now.year, now.month, 1).toString();
-        compare = 'months';
+        compare = 'month';
         break;
       case DashboardFilter
             .semana: //no se permite en endpoints de estos indicadores

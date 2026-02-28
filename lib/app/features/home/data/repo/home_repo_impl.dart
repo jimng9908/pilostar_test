@@ -17,8 +17,9 @@ class DashboardRepositoryImpl implements HomeRepo {
     return remoteDataSource.getTotalRevenue(filter);
   }
 
+  @override
   Future<MetricEntity?> getCustomers(DashboardFilter filter) {
-    return remoteDataSource.getTotalRevenue(filter);
+    return remoteDataSource.getCustomers(filter);
   }
 
   @override
